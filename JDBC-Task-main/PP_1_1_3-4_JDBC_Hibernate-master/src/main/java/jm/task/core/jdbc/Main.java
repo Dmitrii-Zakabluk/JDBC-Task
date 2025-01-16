@@ -1,6 +1,5 @@
 package jm.task.core.jdbc;
 
-import com.mysql.jdbc.Driver;
 import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
 
