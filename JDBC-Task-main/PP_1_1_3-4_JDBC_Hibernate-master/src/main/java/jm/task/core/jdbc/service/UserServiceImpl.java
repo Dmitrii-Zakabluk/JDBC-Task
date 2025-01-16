@@ -9,7 +9,8 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private final UserDao userDao = new UserDaoJDBCImpl();
-        @Override
+
+    @Override
     public void createUsersTable() throws SQLException {
         userDao.createUsersTable();
 

@@ -21,41 +21,26 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void createUsersTable() throws SQLException {
-        connection.setAutoCommit(false);
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (" +
                                     "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
                                     "name VARCHAR(255), " +
-                                    "last_name VARCHAR(255), age INT)"
-            );
-            connection.commit();
+                                    "last_name VARCHAR(255), " +
+                                    "age INT)");
         } catch (SQLException e) {
-            connection.rollback();
-        } finally {
-            connection.setAutoCommit(true);
+            throw new RuntimeException(e);
         }
+
     }
 
     @Override
     public void dropUsersTable() {
-        try {
-            connection.setAutoCommit(false);
-            try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate("DROP TABLE IF EXISTS users");
-                connection.commit();
-            }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DROP TABLE IF EXISTS users");
+
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,7 +77,9 @@ public class UserDaoJDBCImpl implements UserDao {
     public void removeUserById(long id) {
         try {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE id = ?")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(
+                    "DELETE FROM users WHERE id = ?")
+            ) {
 
                 preparedStatement.setLong(1, id);
                 preparedStatement.executeUpdate();
@@ -119,9 +106,12 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try {
             connection.setAutoCommit(false);
-            try(ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM users")) {
+            try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM users")) {
                 while (resultSet.next()) {
-                    User user = new User(resultSet.getString("name"), resultSet.getString("last_name"), resultSet.getByte("age"));
+                    User user = new User(resultSet.getString("name"),
+                            resultSet.getString("last_name"),
+                            resultSet.getByte("age"));
+
                     user.setId(resultSet.getLong("id"));
                     users.add(user);
                 }
@@ -146,24 +136,12 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try {
-            connection.setAutoCommit(false);
-            try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate("TRUNCATE TABLE users");
-                connection.commit();
-            }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("TRUNCATE TABLE users");
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
         }
     }
 }
+
