@@ -45,7 +45,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try {
+
             try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (" +
                                                                                    "name, last_name, age) " +
                                                                                    "VALUES (?, ?, ?)")) {
@@ -56,7 +56,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 preparedStatement.executeUpdate();
                 connection.commit();
             }
-        } catch (SQLException e) {
+         catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
@@ -74,7 +74,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try {
+
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "DELETE FROM users WHERE id = ?")
@@ -84,7 +84,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 preparedStatement.executeUpdate();
                 connection.commit();
             }
-        } catch (SQLException e) {
+         catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException ex) {
@@ -103,7 +103,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
 
-        try {
+
             try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM users")) {
                 while (resultSet.next()) {
                     User user = new User(resultSet.getString("name"),
@@ -114,7 +114,7 @@ public class UserDaoJDBCImpl implements UserDao {
                     users.add(user);
                 }
             }
-        } catch (SQLException e) {
+         catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return users;
