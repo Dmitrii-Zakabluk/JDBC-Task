@@ -5,6 +5,8 @@ import jm.task.core.jdbc.service.UserServiceImpl;
 
 import java.sql.SQLException;
 
+import static jm.task.core.jdbc.util.Util.HibernateUtil.factoryClose;
+
 public class Main {
     private final static UserService userService = new UserServiceImpl();
 
@@ -23,5 +25,7 @@ public class Main {
         userService.cleanUsersTable();
 
         userService.dropUsersTable();
+
+        factoryClose();
     }
 }

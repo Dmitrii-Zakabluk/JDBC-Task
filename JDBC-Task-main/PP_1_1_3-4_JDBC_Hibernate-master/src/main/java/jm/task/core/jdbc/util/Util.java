@@ -39,17 +39,26 @@ public class Util {
 
                     configuration.addAnnotatedClass(User.class);
 
-                    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                            .applySettings(configuration.getProperties()).build();
+                    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 
                     sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             return sessionFactory;
         }
+
+
+        public static void factoryClose() {
+            if (sessionFactory == null && getSessionFactory().isOpen()) {
+                sessionFactory.close();
+                System.out.println("sessionFactory was closed!");
+            }
+        }
     }
+
 
     public static final class ConnectionManager {
         private static final String PASSWORD_KEY = "db.password";
@@ -73,11 +82,7 @@ public class Util {
 
         public static Connection open() {
             try {
-                return DriverManager.getConnection(
-                        PropertiesUtil.get(URL_KEY),
-                        PropertiesUtil.get(USERNAME_KEY),
-                        PropertiesUtil.get(PASSWORD_KEY)
-                );
+                return DriverManager.getConnection(PropertiesUtil.get(URL_KEY), PropertiesUtil.get(USERNAME_KEY), PropertiesUtil.get(PASSWORD_KEY));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
