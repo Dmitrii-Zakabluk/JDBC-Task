@@ -26,6 +26,7 @@ public class UserDaoHibernateImpl implements UserDao {
                                       "age INT)")
                     .executeUpdate();
             transaction.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,6 +39,7 @@ public class UserDaoHibernateImpl implements UserDao {
             session.createNativeQuery("DROP TABLE IF EXISTS users")
                     .executeUpdate();
             transaction.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,6 +53,7 @@ public class UserDaoHibernateImpl implements UserDao {
             User user = new User(name, lastName, age);
             session.save(user);
             transaction.commit();
+            session.close();
         } catch (HibernateException he) {
             if (transaction != null) {
                 transaction.rollback();
@@ -70,6 +73,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 session.delete(user);
             }
             transaction.commit();
+            session.close();
         } catch (HibernateException he) {
             if (transaction != null) {
                 transaction.rollback();
@@ -85,6 +89,7 @@ public class UserDaoHibernateImpl implements UserDao {
             Transaction transaction = session.beginTransaction();
             users = session.createQuery("FROM User", User.class).getResultList();
             transaction.commit();
+            session.close();
         } catch (HibernateException he) {
             he.printStackTrace();
         }
@@ -98,6 +103,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
             session.createQuery("DELETE User").executeUpdate();
             transaction.commit();
+            session.close();
         } catch (HibernateException he) {
             if (transaction != null) {
                 transaction.rollback();
